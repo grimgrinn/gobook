@@ -29,3 +29,23 @@ func PopCountLoop(x uint64) int {
 	}
 	return res
 }
+
+func PopCountBytes(x uint64) int {
+	result := 0
+	for i := 0; i < 64; i++ {
+		if x&1 == 1 {
+			result += 1
+		}
+		x >>= 1
+	}
+	return result
+}
+
+func PopCountClear(x uint64) int {
+	result := 0
+	for x != 0 {
+		result++
+		x = x & (x - 1)
+	}
+	return result
+}

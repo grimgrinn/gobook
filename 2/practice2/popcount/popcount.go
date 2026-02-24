@@ -6,7 +6,9 @@ import (
 )
 
 func main() {
-	a := uint64(50)
+	a := uint64(5)
 	fmt.Println(popcount.PopCount(a))
 	fmt.Println(popcount.PopCountLoop(a))
+	fmt.Println(popcount.PopCountBytes(a))
+	fmt.Println(popcount.PopCountClear(a))
 }
