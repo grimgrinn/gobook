@@ -8,4 +8,5 @@ import (
 func main() {
 	a := uint64(50)
 	fmt.Println(popcount.PopCount(a))
+	fmt.Println(popcount.PopCountLoop(a))
 }
