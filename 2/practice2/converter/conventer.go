@@ -60,7 +60,7 @@ func MToF(m Meter) Foot { return Foot(m * 3.28084) }
 func FToM(f Foot) Meter { return Meter(f / 3.28084) }
 
 // KToP преобразует килограммы в фунты
-func KToP(k Kilogram) Foot { return Foot(k * 2.20462) }
+func KToP(k Kilogram) Pound { return Pound(k * 2.20462) }
 
 // PToK преобразует фунты в килограммы
 func PToK(p Pound) Kilogram { return Kilogram(p / 2.20462) }
