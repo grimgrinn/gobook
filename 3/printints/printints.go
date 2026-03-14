@@ -1,5 +1,5 @@
 // intsToString подобна fmt.Sprint(values), но добавляет запятые.
-package printints
+package main
 
 import (
 	"bytes"
