@@ -2,7 +2,10 @@
 // неотрицательного десятичного числа.
 package comma
 
-import "bytes"
+import (
+	"bytes"
+	"strings"
+)
 
 func Comma(s string) string {
 	n := len(s)
@@ -64,4 +67,30 @@ func reverse(s string) string {
 		r[i], r[j] = r[j], r[i]
 	}
 	return string(r)
+}
+
+func CommaFloat(s string) string {
+	// 1. Обрабатываем знак
+	sign := ""
+	if s[0] == '+' || s[0] == '-' {
+		sign = string(s[0])
+		s = s[1:] // отрезали знак
+	}
+
+	// 2. Ищем точку и разделяем
+	dotIndex := strings.Index(s, ".")
+	if dotIndex == -1 {
+		// Нет точки, Сomma ко всей строке
+		return sign + CommaSlice(s)
+	}
+
+	// Есть точка
+	integerPart := s[:dotIndex]      // целая часть
+	fractionalPart := s[dotIndex+1:] // дробная часть
+
+	// 3. Comma только к целой части
+	integerWithCommas := CommaSlice(integerPart)
+
+	// 4. Склеиваем обратно
+	return sign + integerWithCommas + "." + fractionalPart
 }
