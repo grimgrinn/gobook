@@ -28,7 +28,7 @@ func spaceTransform(s string) string {
 				write++
 				space = true
 			}
-			// если не пробел пропускаем
+			// если уже пробел пропускаем
 		} else {
 			str[write] = str[read]
 			write++
