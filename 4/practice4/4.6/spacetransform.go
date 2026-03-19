@@ -11,17 +11,12 @@ func spaceTransform(s string) string {
 		return s
 	}
 
-	write := 1
+	write := 0
 
 	str := []rune(s)
 	space := false
 
-	if unicode.IsSpace(str[0]) {
-		str[0] = ' '
-		space = true
-	}
-
-	for read := 1; read < len(str); read++ {
+	for read := 0; read < len(str); read++ {
 		if unicode.IsSpace(str[read]) {
 			if !space {
 				str[write] = ' '
@@ -39,7 +34,7 @@ func spaceTransform(s string) string {
 }
 
 func main() {
-	str := "what a fuck pepe    shneyne  pepe wtfaa   wfaa pepe sneyne"
+	str := "      what a fuck pepe    shneyne  pepe wtfaa   wfaa pepe sneyne"
 
 	fmt.Println(str)
 
