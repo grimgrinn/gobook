@@ -9,7 +9,7 @@ import (
 type Movie struct {
 	Title  string
 	Year   int  `json:"released"`
-	Color  bool `json:"color,omitempty`
+	Color  bool `json:"color,omitempty"`
 	Actors []string
 }
 
@@ -23,10 +23,17 @@ var movies = []Movie{
 }
 
 func main() {
-	data, err := json.Marshal(movies)
+	data, err := json.MarshalIndent(movies, "", " ")
 	if err != nil {
 		log.Fatalf("Сбй маршалинга JSON: %s", err)
 	}
 
 	fmt.Printf("%s\n", data)
+
+	var titles []struct{ Title string }
+
+	if err := json.Unmarshal(data, &titles); err != nil {
+		log.Fatalf("Сбой демаршалинга JSON: %s", err)
+	}
+	fmt.Println(titles)
 }
