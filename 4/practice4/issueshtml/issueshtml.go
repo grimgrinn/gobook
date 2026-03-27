@@ -1,6 +1,11 @@
-package issueshtml
+package main
 
-import "html/template"
+import (
+	"gobook/4/github"
+	"html/template"
+	"log"
+	"os"
+)
 
 var issueList = template.Must(template.New("issuelist").Parse(`
 <h1>{{.TotalCount}} тем</h1>
@@ -21,3 +26,13 @@ var issueList = template.Must(template.New("issuelist").Parse(`
 {{end}}
 </table>
 `))
+
+func main() {
+	result, err := github.SearchIssues(os.Args[1:])
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := issueList.Execute(os.Stdout, result); err != nil {
+		log.Fatal(err)
+	}
+}
