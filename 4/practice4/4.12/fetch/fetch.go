@@ -50,7 +50,7 @@ func main() {
 		fmt.Printf("Загружаю %d...", num)
 		comic, err := fetchComic(num)
 		if err != nil {
-			fmt.Println("пропуск: %v\n", err)
+			fmt.Printf("пропуск: %v\n", err)
 			continue
 		}
 		comics = append(comics, *comic)
