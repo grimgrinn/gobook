@@ -1,4 +1,4 @@
-package main
+package findlinks
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 
 // visit добавляет в links все ссылки,
 // найденные в n, и возвращает результат.
-func visit(links []string, n *html.Node) []string {
+func Visit(links []string, n *html.Node) []string {
 	if n.Type == html.ElementNode && n.Data == "a" {
 		for _, a := range n.Attr {
 			if a.Key == "href" {
@@ -18,7 +18,7 @@ func visit(links []string, n *html.Node) []string {
 		}
 	}
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		links = visit(links, c)
+		links = Visit(links, c)
 	}
 	return links
 }
@@ -29,7 +29,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "findlinks1: %v\n", err)
 		os.Exit(1)
 	}
-	for _, link := range visit(nil, doc) {
+	for _, link := range Visit(nil, doc) {
 		fmt.Println(link)
 	}
 }
