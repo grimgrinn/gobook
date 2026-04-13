@@ -22,7 +22,7 @@ func main() {
 			break
 		}
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "chacount: %v\n", err)
+			fmt.Fprintf(os.Stderr, "charcount: %v\n", err)
 			os.Exit(1)
 		}
 		if r == unicode.ReplacementChar && n == 1 {
