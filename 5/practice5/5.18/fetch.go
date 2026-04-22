@@ -1,30 +1,45 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path"
 )
 
-// Fetch загружает URL и возвращает имя и длину локального файла.
 func fetch(url string) (filename string, n int64, err error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", 0, err
 	}
+
 	defer resp.Body.Close()
+
 	local := path.Base(resp.Request.URL.Path)
-	if local == "/" {
+	if local == "/" || local == "." {
 		local = "index.html"
 	}
+
 	f, err := os.Create(local)
 	if err != nil {
 		return "", 0, err
 	}
+	defer func() {
+		closeErr := f.Close()
+		if err == nil {
+			err = closeErr
+		}
+	}()
+
 	n, err = io.Copy(f, resp.Body)
-	if closeErr := f.Close(); err == nil {
-		err = closeErr
-	}
 	return local, n, err
+}
+
+func main() {
+	argument := os.Args[1]
+
+	fmt.Printf("%s %v", argument, argument)
+
+	fetch(argument)
 }
