@@ -14,7 +14,7 @@ type countingWriter struct {
 func (s *countingWriter) Write(p []byte) (n int, err error) {
 	n, err = s.iow.Write(p)
 	s.counter += int64(n)
-	return n, nil
+	return n, err
 }
 
 func CountingWriter(w io.Writer) (io.Writer, *int64) {
