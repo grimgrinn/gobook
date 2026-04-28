@@ -20,6 +20,9 @@ func (f *celsiusFlag) Set(s string) error {
 	case "F", "°F":
 		f.Celsius = tempconv.FToC(tempconv.Fahrenheit(value))
 		return nil
+	case "K", "°K":
+		f.Celsius = tempconv.KToC(tempconv.Kelvin(value))
+		return nil
 	}
 	return fmt.Errorf("Неверная температура %q", s)
 }
