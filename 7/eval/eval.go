@@ -63,7 +63,7 @@ func (b binary) Eval(env Env) float64 {
 	case '+':
 		return b.x.Eval(env) + b.y.Eval(env)
 	case '-':
-		return b.x.Eval(env) - b.Eval(env)
+		return b.x.Eval(env) - b.y.Eval(env)
 	case '*':
 		return b.x.Eval(env) * b.y.Eval(env)
 	case '/':
