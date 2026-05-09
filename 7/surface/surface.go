@@ -37,7 +37,7 @@ func plot(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "некорректное выражение: "+err.Error(), http.StatusBadRequest)
 		return
 	}
-	w.Header().Set("Conten-Type", "image/svg+xml")
+	w.Header().Set("Content-Type", "image/svg+xml")
 	surface(w, func(x, y float64) float64 {
 		r := math.Hypot(x, y) // Расстояние от (0,0)
 		return expr.Eval(eval.Env{"x": x, "y": y, "r": r})
@@ -58,7 +58,7 @@ func surface(w io.Writer, f func(x, y float64) float64) {
 	zscale := height * 0.4
 
 	fmt.Fprintf(w, "<svg xmlns='http://www.w3.org/2000/svg' "+
-		"style='stroke: grey; fill; white; stroke-width: 0.7'"+
+		"style='stroke: grey; fill: white; stroke-width: 0.7' "+
 		"width='%d' height='%d'>", width, height)
 
 	for i := 0; i < cells; i++ {
