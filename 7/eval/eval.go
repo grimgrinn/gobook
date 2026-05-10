@@ -3,6 +3,7 @@ package eval
 import (
 	"fmt"
 	"math"
+	"strconv"
 	"strings"
 )
 
@@ -12,6 +13,8 @@ type Expr interface {
 	Eval(env Env) float64
 	// Check сообщает об ошибках в данном Expr и добавляет свои Vars.
 	Check(vars map[Var]bool) error
+
+	String() string
 }
 
 // Var определяет переменную, например x.
@@ -84,40 +87,6 @@ func (c call) Eval(env Env) float64 {
 	panic(fmt.Sprintf("неподдерживаемый вызов функции: %s", c.fn))
 }
 
-// func TestEval(t *testing.T) {
-// 	tests := []struct {
-// 		expr string
-// 		env  Env
-// 		want string
-// 	}{
-// 		{"sqrt(A / pi)", Env{"A": 87616, "pi": math.Pi}, "167"},
-// 		{"pow(x, 3) + pow(y, 3)", Env{"x": 12, "y": 1}, "1729"},
-// 		{"pow(x, 3) + pow(y, 3)", Env{"x": 9, "y": 10}, "1729"},
-// 		{"5 / 9 * (F - 32)", Env{"F": -40}, "-40"},
-// 		{"5 / 9 * (F - 32)", Env{"F": 32}, "0"},
-// 		{"5 / 9 * (F - 32)", Env{"F": 212}, "100"},
-// 	}
-// 	var prevExpr string
-// 	for _, test := range tests {
-// 		// Выводит expr, только когда ого изменяется.
-// 		if test.expr != prevExpr {
-// 			fmt.Printf("\n%s\n", test.expr)
-// 			prevExpr = test.expr
-// 		}
-// 		expr, err := Parse(test.expr)
-// 		if err != nil {
-// 			t.Error(err) // Ошибка анализа
-// 			continue
-// 		}
-// 		got := fmt.Sprintf("%s.6g", expr.Eval(test.env))
-// 		fmt.Printf("\t%v => %s\n", test.env, got)
-// 		if got != test.want {
-// 			t.Errorf("%s.Eval() в %v = %q, требуется %q\n", test.expr, test.env, got, test.want)
-// 		}
-
-// 	}
-// }
-
 func (v Var) Check(vars map[Var]bool) error {
 	vars[v] = true
 	return nil
@@ -161,3 +130,27 @@ func (c call) Check(vars map[Var]bool) error {
 }
 
 var numParams = map[string]int{"pow": 2, "sin": 1, "sqrt": 1}
+
+func (v Var) String() string {
+	return string(v)
+}
+
+func (l literal) String() string {
+	return strconv.FormatFloat(float64(l), 'g', -1, 64)
+}
+
+func (u unary) String() string {
+	return string(u.op) + u.x.String()
+}
+
+func (b binary) String() string {
+	return b.x.String() + string(b.op) + b.y.String()
+}
+
+func (c call) String() string {
+	args := make([]string, len(c.args))
+	for i, arg := range c.args {
+		args[i] = arg.String()
+	}
+	return c.fn + "(" + strings.Join(args, ", ") + ")"
+}
