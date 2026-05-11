@@ -131,6 +131,12 @@ func parsePrimary(lex *lexer) Expr {
 			}
 		}
 		lex.next() // consume ')'
+		if id == "min" {
+			if len(args) == 0 {
+				panic(lexPanic("min: ожидается хотя бы один аргумент"))
+			}
+			return min{args: args}
+		}
 		return call{fn: id, args: args}
 
 	case scanner.Int, scanner.Float:

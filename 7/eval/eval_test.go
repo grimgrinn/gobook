@@ -70,3 +70,46 @@ func TestString(t *testing.T) {
 		}
 	}
 }
+
+func TestMin(t *testing.T) {
+	tests := []struct {
+		expr string
+		env  Env
+		want float64
+	}{
+		{"min(1,2,3)", nil, 1},
+		{"min(5,4,3,2,1)", nil, 1},
+		{"min(x,y,z)", Env{"x": 10, "y": 20, "z": 5}, 5},
+		{"min(10, x, 30)", Env{"x": 25}, 10},
+		{"min(x,y) + min(a,b)", Env{"x": 100, "y": 200, "a": 50, "b": 150}, 150}, // 100 + 50
+	}
+
+	for _, test := range tests {
+		expr, err := Parse(test.expr)
+		if err != nil {
+			t.Errorf("Parse(%q) error: %v", test.expr, err)
+			continue
+		}
+
+		got := expr.Eval(test.env)
+		if got != test.want {
+			t.Errorf("%s.Eval() = %v, want %v", test.expr, got, test.want)
+		}
+	}
+}
+
+func TestMinStaring(t *testing.T) {
+	expr, _ := Parse("min(1, x, 3)")
+	want := "min(1, x, 3)"
+	if expr.String() != want {
+		t.Errorf("String() = %q, want %q", expr.String(), want)
+	}
+}
+
+func TestMinError(t *testing.T) {
+	_, err := Parse("min()")
+	if err == nil {
+		t.Error("Parse(\"min()\") должно вернуть ошибку, но вернуло nil")
+	}
+
+}

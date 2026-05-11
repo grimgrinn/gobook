@@ -41,6 +41,11 @@ type call struct {
 	args []Expr
 }
 
+// min представляет выражение вычисления минимального значения.
+type min struct {
+	args []Expr
+}
+
 type Env map[Var]float64
 
 func (v Var) Eval(env Env) float64 {
@@ -87,6 +92,20 @@ func (c call) Eval(env Env) float64 {
 	panic(fmt.Sprintf("неподдерживаемый вызов функции: %s", c.fn))
 }
 
+func (m min) Eval(env Env) float64 {
+	if len(m.args) == 0 {
+		return 0
+	}
+	minVal := m.args[0].Eval(env)
+	for _, arg := range m.args[1:] {
+		v := arg.Eval(env)
+		if v < minVal {
+			minVal = v
+		}
+	}
+	return minVal
+}
+
 func (v Var) Check(vars map[Var]bool) error {
 	vars[v] = true
 	return nil
@@ -129,6 +148,18 @@ func (c call) Check(vars map[Var]bool) error {
 	return nil
 }
 
+func (m min) Check(vars map[Var]bool) error {
+	if len(m.args) == 0 {
+		return fmt.Errorf("min: отсутствуют аргументы")
+	}
+	for _, arg := range m.args {
+		if err := arg.Check(vars); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 var numParams = map[string]int{"pow": 2, "sin": 1, "sqrt": 1}
 
 func (v Var) String() string {
@@ -153,4 +184,12 @@ func (c call) String() string {
 		args[i] = arg.String()
 	}
 	return c.fn + "(" + strings.Join(args, ", ") + ")"
+}
+
+func (m min) String() string {
+	args := make([]string, len(m.args))
+	for i, arg := range m.args {
+		args[i] = arg.String()
+	}
+	return "min(" + strings.Join(args, ", ") + ")"
 }
