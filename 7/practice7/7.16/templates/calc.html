@@ -1,0 +1,8 @@
+<form methos="POST">
+    <label>Выражение: <input name="expr" value="{{.Expr}}"></label><br>
+    {{range .Vars}}
+        <label>{{.}}: <input name="{{.}}"></label><br>
+    {{end}}
+    <input type="submit">
+</form>
+<h2>Результат: {{.Result}}</h2>

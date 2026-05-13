@@ -98,7 +98,7 @@ func TestMin(t *testing.T) {
 	}
 }
 
-func TestMinStaring(t *testing.T) {
+func TestMinString(t *testing.T) {
 	expr, _ := Parse("min(1, x, 3)")
 	want := "min(1, x, 3)"
 	if expr.String() != want {
