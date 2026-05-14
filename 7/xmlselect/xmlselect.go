@@ -20,13 +20,14 @@ func main() {
 			fmt.Fprintf(os.Stderr, "xmlselect: %v\n", err)
 			os.Exit(1)
 		}
+
 		switch tok := tok.(type) {
 		case xml.StartElement:
 			stack = append(stack, tok.Name.Local) // Внесение в стек
 		case xml.EndElement:
 			stack = stack[:len(stack)-1] // Снятие со стека
 		case xml.CharData:
-			if containsAll(stack, os.Args[:1]) {
+			if containsAll(stack, os.Args[1:]) {
 				fmt.Printf("%s: %s\n", strings.Join(stack, " "), tok)
 			}
 		}
