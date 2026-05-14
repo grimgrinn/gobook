@@ -1,8 +1,29 @@
-<form methos="POST">
-    <label>Выражение: <input name="expr" value="{{.Expr}}"></label><br>
-    {{range .Vars}}
-        <label>{{.}}: <input name="{{.}}"></label><br>
-    {{end}}
-    <input type="submit">
-</form>
-<h2>Результат: {{.Result}}</h2>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Калькулятор</title>
+    </head>
+    <body>
+        <h1>Калькулятор выражений</h1>
+        <form method="POST">
+            <label>
+                Выражение: <input type="text" name="expr" value="{{.Expr}}"></label><br>
+                {{if .Vars}}
+                    <h3>Переменные:</h3>
+                    {{range $var := .Vars}}
+                        <label>{{$var}}: <input type="text" name="{{$var}}"></label><br>
+                    {{end}}
+                {{end}}
+                
+                <input type="submit">
+        </form>
+
+        {{if .Result}}
+            <h2>Результат: {{.Result}}</h2>
+        {{end}}
+
+        {{if .Error}}
+            <h2 style="color: red;">Ошибка: {{.Error}}</h2>
+        {{end}}
+    </body>
+</html>
