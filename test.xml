@@ -1,0 +1,8 @@
+<root>
+    <div class="main">
+        <h2>Заголовок 1</h2>
+    </div>
+    <div class="side">
+        <h2>Заголовок 2</h2>
+    </div>
+</root>

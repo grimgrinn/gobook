@@ -19,7 +19,7 @@ func main() {
 			log.Print(err) // Например, обрыв соединения
 			continue
 		}
-		handleConn(conn) // Обработка единственного подключения
+		go handleConn(conn) // Обработка единственного подключения
 	}
 }
 
