@@ -52,30 +52,24 @@ func parseselector(s string) (Selector, error) {
 }
 
 func matches(start xml.StartElement, sel Selector) bool {
-	//	fmt.Fprintf(os.Stderr, "DEBUG: mathes: element=%q, selector=%q, attrs=%v\n", start.Name.Local, sel.Name, sel.Attr)
 	if start.Name.Local != sel.Name {
-		//	fmt.Fprintf(os.Stderr, "DEBUG matches: имя не совпалает (%q vs %q)\n", start.Name.Local, sel.Name)
 		return false
 	}
 
 	for key, wantVal := range sel.Attr {
-		//		fmt.Fprintf(os.Stderr, "DEBUG matches: проверяем атрибут %q = %q\n", key, wantVal)
 		found := false
 		for _, attr := range start.Attr {
 			if attr.Name.Local == key {
 				if attr.Value == wantVal {
 					found = true
-					//					fmt.Fprintf(os.Stderr, "DEBUG matches: атрибут %q найден со значением %q\n", key, attr.Value)
 					break
 				}
 			}
 		}
 		if !found {
-			//			fmt.Fprintf(os.Stderr, "DEBUG matches: атрибут %q не найден\n", key)
 			return false
 		}
 	}
-	//	fmt.Fprintf(os.Stderr, "DEBUG mawtches: УСПЕХ\n")
 	return true
 }
 
@@ -118,13 +112,10 @@ func main() {
 	for _, arg := range os.Args[1:] {
 		sel, err := parseselector(arg)
 		if err != nil {
-			//		fmt.Fprintf(os.Stderr, "xmlselect: ошибка в селекторе %q: %v\n", arg, err)
 			os.Exit(1)
 		}
 		selectors = append(selectors, sel)
 	}
-
-	//	fmt.Fprintf(os.Stderr, "DEBUG: ceлекторы: %+v\n", selectors)
 
 	dec := xml.NewDecoder(os.Stdin)
 	var stack []string
@@ -142,12 +133,10 @@ func main() {
 		case xml.StartElement:
 			stack = append(stack, tok.Name.Local)
 			elemStack = append(elemStack, tok)
-			//		fmt.Fprintf(os.Stderr, "DEBUG: start %s, stack=%v\n", tok.Name.Local, stack)
 		case xml.EndElement:
 			stack = stack[:len(stack)-1]
 			elemStack = elemStack[:len(elemStack)-1]
 		case xml.CharData:
-			//		fmt.Fprintf(os.Stderr, "DEBUG: char data %q, stack=%v\n", tok, stack)
 			if matchesAll(stack, elemStack, selectors) && strings.TrimSpace(string(tok)) != "" {
 				fmt.Printf("%s: %s\n", strings.Join(stack, " "), tok)
 			}
