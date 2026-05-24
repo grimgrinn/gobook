@@ -2,6 +2,7 @@
 package main
 
 import (
+	"flag"
 	"io"
 	"log"
 	"net"
@@ -9,7 +10,9 @@ import (
 )
 
 func main() {
-	listener, err := net.Listen("tcp", "localhost:8000")
+	port := flag.String("port", "8000", "port number")
+	flag.Parse()
+	listener, err := net.Listen("tcp", "localhost:"+*port)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -19,7 +22,7 @@ func main() {
 			log.Print(err) // Например, обрыв соединения
 			continue
 		}
-		handleConn(conn) // Обработка единственного подключения
+		go handleConn(conn) // Обработка единственного подключения
 	}
 }
 
