@@ -7,7 +7,6 @@ import (
 	"net"
 	"os"
 	"strings"
-	"time"
 )
 
 type clock struct {
@@ -65,11 +64,9 @@ func main() {
 			}
 		}
 		// Очищаем экран и выводим таблицу
-		fmt.Print("\033[2J\033[H") // очистка экрана (ANSI)
+		fmt.Printf("\r\033[K") // очистка экрана (ANSI)
 		for _, cl := range clocks {
 			fmt.Printf("%s: %s\t", cl.city, cl.time)
 		}
-		fmt.Println()
-		time.Sleep(50 * time.Millisecond) // небольшая задержка, чтобы не мигало
 	}
 }
