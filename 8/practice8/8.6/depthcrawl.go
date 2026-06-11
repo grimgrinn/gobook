@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"gobook/5/links"
 	"log"
-	"os"
 )
 
 type item struct {
@@ -30,12 +29,18 @@ func main() {
 	maxDepth := flag.Int("depth", 0, "максимальная глубина (0 = без ограничений)")
 	flag.Parse()
 
+	args := flag.Args()
+	if len(args) != 1 {
+		log.Fatal("использование: depthcrawl [-depth=N] <URL> (флаг -depth должен быть перед URL)")
+	}
+	startURL := args[0]
+
 	worklist := make(chan []item)
 	var n int
 
 	n++
 	go func() {
-		start := []item{{os.Args[1], 0}}
+		start := []item{{startURL, 0}}
 		worklist <- start
 	}()
 
