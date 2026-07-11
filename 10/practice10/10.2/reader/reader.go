@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log"
 )
 
 // File предствляет один файл в архиве
@@ -37,16 +38,25 @@ func RegisterFormat(name string, match func(io.Reader) (bool, error), new func(i
 // Open открывает архив и возвращает ArchiveReader.
 func Open(r io.ReaderAt, size int64) (ArchiveReader, string, error) {
 	// Создаем io.Reader для чтения заголовка
+
+	fmt.Printf("DEBUG: formrats ocunt = %d\n", len(formats))
 	header := make([]byte, 512)
-	io.ReadFull(io.NewSectionReader(r, 0, size), header)
-	reader := bytes.NewReader(header)
+	if _, err := io.ReadFull(io.NewSectionReader(r, 0, size), header); err != nil {
+		return nil, "", err
+	}
 
 	for _, fmt := range formats {
+		log.Printf("Debug: проверяю формат %s\n", fmt.Name)
+
+		reader := bytes.NewReader(header)
+
 		ok, err := fmt.Match(reader)
 		if err != nil {
+			log.Printf("DEBUG: ошибка в match: %v\n", err)
 			continue
 		}
 		if ok {
+			log.Printf("Debug: формат %s определен\n", fmt.Name)
 			ar, err := fmt.New(r, size)
 			if err != nil {
 				return nil, "", err

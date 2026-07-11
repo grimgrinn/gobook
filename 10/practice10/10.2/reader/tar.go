@@ -3,10 +3,12 @@ package reader
 import (
 	"archive/tar"
 	"bytes"
+	"fmt"
 	"io"
 )
 
 func init() {
+	fmt.Println("регистрация тар")
 	RegisterFormat("tar", matchTar, newTar)
 }
 
@@ -17,10 +19,17 @@ func matchTar(r io.Reader) (bool, error) {
 	if _, err := io.ReadFull(r, buf); err != nil {
 		return false, err
 	}
-	if len(buf) < 257+8 {
-		return false, nil
+	fmt.Printf("DEBUG TAR: первые 20 байт: %x\n", buf[:20])
+	fmt.Printf("DEBUG TAR: на смещении 257: %x\n", buf[257:257+8])
+
+	// Проверяем USTAR магию (GNU tar)
+	if bytes.HasPrefix(buf[257:257+8], []byte("ustar\x00")) ||
+		bytes.HasPrefix(buf[257:257+8], []byte("ustar \x00")) ||
+		bytes.HasPrefix(buf[257:257+8], []byte("ustar  \x00")) {
+		return true, nil
 	}
-	return bytes.HasPrefix(buf[257:257+8], []byte("ustar\x00")), nil
+
+	return false, nil
 }
 
 // tarReader обертка для tar.Reader

@@ -3,10 +3,12 @@ package reader
 import (
 	"archive/zip"
 	"bytes"
+	"fmt"
 	"io"
 )
 
 func init() {
+	fmt.Println("регистрация zip")
 	RegisterFormat("zip", matchZip, newZip)
 }
 
@@ -16,6 +18,7 @@ func matchZip(r io.Reader) (bool, error) {
 	if _, err := io.ReadFull(r, buf); err != nil {
 		return false, err
 	}
+	fmt.Printf("DEBUG ZIP: %x\n", buf) // 504b0304
 	return bytes.Equal(buf, []byte("PK\x03\x04")), nil
 }
 
