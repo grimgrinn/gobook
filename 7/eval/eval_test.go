@@ -113,3 +113,36 @@ func TestMinError(t *testing.T) {
 	}
 
 }
+
+func TestCoverage(t *testing.T) {
+	var tests = []struct {
+		input string
+		env   Env
+		want  string // Ожидаемая ошибка от Parse/Check
+		// или результат Eval
+	}{
+		{"x % 2", nil, "неожиданный символ '%'"},
+		{"!true", nil, "неожиданный символ '!'"},
+		{"log(10)", nil, `неизвестная функция "log"`},
+		{"sqrt(1, 2)", nil, "вызов sqrt c аргументами, с 2 аргументами, нужен 1"},
+		{"sqrt(A / pi)", Env{"A": 87616, "pi": math.Pi}, "167"},
+		{"pow(x, 3) + pow(y, 3)", Env{"x": 9, "y": 10}, "1729"},
+		{"5 / 9 * (F - 32)", Env{"F": -40}, "-40"},
+	}
+	for _, test := range tests {
+		expr, err := Parse(test.input)
+		if err == nil {
+			err = expr.Check(map[Var]bool{})
+		}
+		if err != nil {
+			if err.Error() != test.want {
+				t.Errorf("%s: получено %q, требуется %q", test.input, err, test.want)
+			}
+			continue
+		}
+		got := fmt.Sprintf("%.6g", expr.Eval(test.env))
+		if got != test.want {
+			t.Errorf("%s: %v => %s, want %s", test.input, test.env, got, test.want)
+		}
+	}
+}

@@ -38,7 +38,6 @@ func RegisterFormat(name string, match func(io.Reader) (bool, error), new func(i
 // Open открывает архив и возвращает ArchiveReader.
 func Open(r io.ReaderAt, size int64) (ArchiveReader, string, error) {
 	// Создаем io.Reader для чтения заголовка
-
 	fmt.Printf("DEBUG: formrats ocunt = %d\n", len(formats))
 	header := make([]byte, 512)
 	if _, err := io.ReadFull(io.NewSectionReader(r, 0, size), header); err != nil {
@@ -47,9 +46,7 @@ func Open(r io.ReaderAt, size int64) (ArchiveReader, string, error) {
 
 	for _, fmt := range formats {
 		log.Printf("Debug: проверяю формат %s\n", fmt.Name)
-
 		reader := bytes.NewReader(header)
-
 		ok, err := fmt.Match(reader)
 		if err != nil {
 			log.Printf("DEBUG: ошибка в match: %v\n", err)
