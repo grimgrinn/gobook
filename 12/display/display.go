@@ -38,7 +38,7 @@ func Display(name string, x interface{}) {
 func display(path string, v reflect.Value) {
 	switch v.Kind() {
 	case reflect.Invalid:
-		fmt.Printf("%s = inbalid\n", path)
+		fmt.Printf("%s = invalid\n", path)
 	case reflect.Slice, reflect.Array:
 		for i := 0; i < v.Len(); i++ {
 			display(fmt.Sprintf("%s[%d]", path, i), v.Index(i))
