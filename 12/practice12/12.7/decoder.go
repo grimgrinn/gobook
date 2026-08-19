@@ -168,7 +168,7 @@ func skipWhitespace(r *bufio.Reader) {
 }
 
 func isWhitespace(ch byte) bool {
-	return ch == ' ' || ch == '\t' || ch == '\n' || ch == '\t'
+	return ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r'
 }
 
 func isDigit(ch byte) bool {
