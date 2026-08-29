@@ -22,3 +22,8 @@ func search(resp http.ResponseWriter, req *http.Request) {
 	//... оствшаяся часть обработчика ...
 	fmt.Fprintf(resp, "Поиск: %+v\n", data)
 }
+
+func main() {
+	http.HandleFunc("/search", search)
+	http.ListenAndServe(":8000", nil)
+}
