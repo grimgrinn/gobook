@@ -9,7 +9,7 @@ import (
 // search реализует окончание URL /search.
 func search(resp http.ResponseWriter, req *http.Request) {
 	var data struct {
-		Labels     []string `http:"1"`
+		Labels     []string `http:"labels"`
 		MaxResults int      `http:"max"`
 		Exact      bool     `http:"x"`
 	}
