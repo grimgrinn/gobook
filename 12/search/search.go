@@ -6,13 +6,15 @@ import (
 	"net/http"
 )
 
+type SearchData struct {
+	Labels     []string `http:"labels"`
+	MaxResults int      `http:"max"`
+	Exact      bool     `http:"x"`
+}
+
 // search реализует окончание URL /search.
 func search(resp http.ResponseWriter, req *http.Request) {
-	var data struct {
-		Labels     []string `http:"labels"`
-		MaxResults int      `http:"max"`
-		Exact      bool     `http:"x"`
-	}
+	var data SearchData
 
 	data.MaxResults = 10 // Значение по умолчанию
 	if err := params.Unpack(req, &data); err != nil {
