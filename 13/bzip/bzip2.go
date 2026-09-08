@@ -1,3 +1,5 @@
+//go:build cgo
+
 // Пакет bzip предоставляет writer, который
 // использует сжатие bzip2
 package bzip
